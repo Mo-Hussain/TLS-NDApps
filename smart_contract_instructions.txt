@@ -34,4 +34,7 @@ For the betting contract:
 - Betting.deployed().then(function(instance){app=instance;})
 - Add a fixture: app.addFixture('Chelsea','Arsenal',{from:web3.eth.accounts[0]})
 - Add a fixture: app.addFixture('Liverpool','Tottenham',{from:web3.eth.accounts[0]})
-- Query a fixture: app.getFixture(0)
+- Query a fixture: app.getFixtureHomeTeam(0)
+- Query number of fixtures: app.getNumberOfFixtures()
+- Query number of bets: app.getNumberOfBets()
+- Propose bet: app.proposeBet(1,2,300,2,1)
