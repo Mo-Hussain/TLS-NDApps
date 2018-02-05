@@ -38,3 +38,5 @@ For the betting contract:
 - Query number of fixtures: app.getNumberOfFixtures()
 - Query number of bets: app.getNumberOfBets()
 - Propose bet: app.proposeBet(1,2,300,2,1)
+- Accept bet: app.acceptBet(0,{from:web3.eth.accounts[3]})
+- Send value: app.payableFunction({from:'0xf17f52151EbEF6C7334FAD080c5704D77216b732',value:90})

@@ -15,8 +15,6 @@ contract Betting {
     uint fixtureID;
     string home;
     string away;
-    uint home_score;
-    uint away_score;
   }
 
   /* Structure to hold a bet between two parties */
@@ -59,7 +57,7 @@ contract Betting {
   /* Function to add a fixture to the contract */
    function addFixture(string _home, string _away) public onlyMaster returns (uint fixtureID){
     fixtureID = fixtureCount++;
-    fixtures[fixtureID] = Fixture(fixtureID,_home,_away,0,0);
+    fixtures[fixtureID] = Fixture(fixtureID,_home,_away);
   }
 
   /* Function allowing a user to propose a bet */
@@ -68,6 +66,12 @@ contract Betting {
     bets[betID] =  Bet(betID, msg.sender, 0, false, _odds, _amount,_home_score,_away_score,0);
     bets[betID].fixture[0] = fixtures[_fixtureID];
   }
+
+  function payableFunction() payable {}
+
+  function getBalance() constant returns (uint) {
+      return master.balance;
+    }
 
   /* Best not to concatenate strings in smart contract as may consume unecessary gas */
   /* Should concatenate strings and the like in the front-end */
@@ -97,12 +101,26 @@ contract Betting {
 
   /* Function to input the scores of a fixture */
   function inputScore(uint _fixtureID, uint _home_score, uint _away_score) public {
-    fixtures[_fixtureID].home_score = _home_score;
-    fixtures[_fixtureID].away_score = _away_score;
+
+    uint bet_id = 0;
+    /* Need to do this for each bet somehow */
+    uint payout = bets[bet_id].amount * bets[bet_id].odds;
+
+    if (_home_score == bets[bet_id].proposer_home_score && _away_score == bets[bet_id].proposer_away_score) {
+      bets[bet_id].winner = bets[bet_id].proposer;
+    }
+
+    else {
+      bets[bet_id].winner = bets[bet_id].acceptor;
+    }
+
+    if (!bets[bet_id].winner.send(payout)) {
+      throw;
+    }
+
+    /* Then delete the bet */
+
   }
-
-  /* Function to get the winner of a bet */
-
 
   /* Function to get all outstanding bets that have not been accepted */
   /* Matt - I think we should do this on the front-end, looping through bets and just getting those accepted */
